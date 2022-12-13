@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Spinometer</title>
+    <style>
+      :root {
+        --globe-width:   12px;
+        --globe-height:  28px;
+        --globe-spacing: 40px;
+        --globe-spread: 3px;
+        --light-off-opacity: 0.4;
+      }
+
+      body {
+        background-color: #222;
+        color: #EFEFEF;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .lightrope {
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        position: absolute;
+        z-index: 1;
+        margin: -15px 0 0 0;
+        padding: 0;
+        pointer-events: none;
+        width: 97vw;
+      }
+
+      .lightrope > li {
+        position: relative;
+        animation-fill-mode: both; 
+        animation-iteration-count:infinite;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: block;
+        width: var(--globe-width);
+        height: var(--globe-height);
+        border-radius: 50%;
+        margin: calc(var(--globe-spacing)/2);
+        display: inline-block;
+        background: rgba(0,247,165,1);
+        box-shadow: 0px calc(var(--globe-height)/6) calc(var(--globe-width)*2) var(--globe-spread) rgba(0,247,165,1);
+        animation-name: flash-1;
+        animation-duration: 2s;
+      }
+
+      .lightrope > li:nth-child(2n+1) {
+        background: rgba(0,255,255,1);
+        box-shadow: 0px calc(var(--globe-height)/6) calc(var(--globe-width)*2) var(--globe-spread) rgba(0,255,255,0.5);
+        animation-name: flash-2;
+        animation-duration: 0.4s;
+      }
+      .lightrope > li:nth-child(4n+2) {
+        background: rgba(247,0,148,1);
+        box-shadow: 0px calc(var(--globe-height)/6) calc(var(--globe-width)*2) var(--globe-spread) rgba(247,0,148,1);
+        animation-name: flash-3;
+        animation-duration: 1.1s;
+      }
+      .lightrope > li:nth-child(odd) {
+        animation-duration: 1.8s;
+      }
+      .lightrope > li:nth-child(3n+1) {
+        animation-duration: 1.4s;
+      }
+      .lightrope > li:before {
+        content: "";
+        position: absolute;
+        background: white;
+        width: calc(var(--globe-width) - 2px);
+        height: calc(var(--globe-height)/3);
+        border-radius: 3px;
+        top: calc(0 - calc(var(--globe-height)/6));
+        left: 1px;
+      }
+      .lightrope > li:after {
+        content: "";
+        top: calc(0px - calc(var(--globe-height)/2));
+        left: calc(var(--globe-width) - 3px);
+        position: absolute;
+        width: calc(var(--globe-spacing) + 12px);
+        height: calc(calc(var(--globe-height)/3) * 2);
+        border-bottom: solid white 2px;
+        border-radius: 50%;
+      }
+      .lightrope > li:last-child:after {
+        content: none;
+      }
+      /*
+      .lightrope > li:first-child {
+        margin-left: var(--globe-spacing);
+      }
+      */
+
+      @keyframes flash-1 { 
+          0%, 100% { background: rgba(0,247,165,1);
+          box-shadow: 0px calc(var(--globe-height)/6) calc(var(--globe-width)*2) var(--globe-spread) rgba(0,247,165,1);} 
+          50% { background: rgba(0,247,165,var(--light-off-opacity));
+          box-shadow: 0px calc(var(--globe-height)/6) calc(var(--globe-width)*2) var(--globe-spread) rgba(0,247,165,0.2);}
+      }
+      @keyframes flash-2 { 
+          0%, 100% { background: rgba(0,255,255,1);
+          box-shadow: 0px calc(var(--globe-height)/6) calc(var(--globe-width)*2) var(--globe-spread) rgba(0,255,255,1);} 
+          50% { background: rgba(0,255,255,var(--light-off-opacity));
+          box-shadow: 0px calc(var(--globe-height)/6) calc(var(--globe-width)*2) var(--globe-spread) rgba(0,255,255,0.2);}
+      }
+      @keyframes flash-3 { 
+          0%, 100% { background: rgba(247,0,148,1);
+          box-shadow: 0px calc(var(--globe-height)/6) calc(var(--globe-width)*2) var(--globe-spread) rgba(247,0,148,1);} 
+          50% { background: rgba(247,0,148,var(--light-off-opacity));
+          box-shadow: 0px calc(var(--globe-height)/6) calc(var(--globe-width)*2) var(--globe-spread) rgba(247,0,148,0.2);}
+      }
+
+      @keyframes animatedBg {
+        0%   {  background-position: 10% 50%; }
+        50%  { background-position: 90% 50%;  }
+        100% { background-position: 10% 50%; }
+      }
+
+      @keyframes borderAnimation {
+        0%  { border-color: rgba(134,0,0,1); }
+        10%  { border-color: rgba(245,0,0,1); }
+        20%  { border-color: rgba(254,159,159,1); }
+        40%  { border-color: rgba(156,255,147,1); }
+        50%  { border-color: rgba(21,255,0,1); }
+        60%  { border-color: rgba(156,255,147,1); }
+        70%  { border-color: rgba(254,159,159,1); }
+        85%  { border-color: rgba(245,0,0,1); }
+        100%  { border-color: rgba(134,0,0,1); }
+      }
+
+      .crazy-background {
+        background: linear-gradient(-45deg, rgba(134,0,0,1) 0%, rgba(245,0,0,1) 20%, rgba(254,159,159,1) 45%, rgba(156,255,147,1) 71%, rgba(21,255,0,1) 100%);
+        background-size: 400% 400%;
+        animation: animatedBg 15s ease infinite;
+      }
+
+      .title {
+        padding-top: 3rem;
+        font-size: 72pt;
+        font-weight: 600;
+        text-align: center;
+        -webkit-text-stroke: 3px;
+        -webkit-text-stroke-color: rgba(0, 0, 0, 0.5);
+        color: rgba(0, 0, 0, 0.2);
+        font-family: Arial, Helvetica, sans-serif;
+        -webkit-background-clip: text;
+      }
+
+      input[type="text"] {
+        background: linear-gradient(-45deg, #222 0%, #232323 20%, #333 45%, #232323 71%, #000 100%);
+        background-size: 400% 400%;
+        animation: animatedBg 15s ease infinite;
+        color: white;
+        font-size: 24pt;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        border-bottom: solid white 3px;
+        font-family: Arial, Helvetica, sans-serif;
+        width: 100%;
+      }
+
+      input[type="text"]:focus-visible {
+        outline: none;
+        border-width: 3px;
+        animation: borderAnimation 3s ease infinite;
+      }
+
+      .number {
+        color: white;
+        font-size: 24pt;
+        width: 5rem;
+        margin-right: 1rem;
+      }
+
+      .invisible-number {
+        color: transparent;
+        user-select: none;
+      }
+
+      #name-list-wrapper {
+        width: 100%;
+        text-align: center;
+      }
+
+      #name-list {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-content: center;
+        height: 65vh;
+      }
+
+      button {
+        display: flex;
+        background: linear-gradient(45deg, rgba(134,0,0,1) 0%, rgba(245,0,0,1) 20%, rgba(254,159,159,1) 45%, rgba(156,255,147,1) 71%, rgba(21,255,0,1) 100%);
+        background-size: 400px 400px;
+        animation: animatedBg 15s ease infinite;
+        border: solid rgba(0,0,0,0.2) 5px;
+        border-radius: 20px;
+        color: white;
+        font-size: 24pt;
+        padding: 1rem;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .button-mini {
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: 0.5rem;
+        padding: 0px;
+        height: fit-content;
+        align-items: center;
+      }
+
+      button:disabled {
+        background: linear-gradient(-45deg, #222 0%, #232323 20%, #333 45%, #232323 71%, #000 100%);
+        color: #666;
+        border-color: #666;
+      }
+
+      button:hover {
+        border-color: white;
+      }
+
+      button:hover:disabled {
+        border-color: #666;
+      }
+
+      .button-icon {
+        padding-right: 1rem;
+      }
+
+      .person-line-item {
+        display: flex;
+        flex-direction: row;
+        width: 33vw;
+        margin-top: 1rem;
+      }
+
+      #app {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+    </style>
+    <script type="module">
+        import { h, Component, render } from "https://unpkg.com/preact@latest?module";
+        import { useState } from "https://unpkg.com/preact@latest/hooks/dist/hooks.module.js?module";
+        import htm from 'https://unpkg.com/htm?module';
+
+        const html = htm.bind(h);
+
+        function App () {
+          const [people, setPeople] = useState([]);
+          const [newPerson, setNewPerson] = useState("");
+          const [spinning, setSpinning] = useState(false);
+
+          const onModifyExisting = n => e => {
+            const { value } = e.target;
+
+            // If value is blank it should be removed
+            if (!value) {
+              setPeople(people.filter((name, index) => index !== n));
+            } else { // Otherwise update the existing entry
+              const updatedPeople = people.map((name, index) => {
+                if (index == n) {
+                  return value
+                } else {
+                  return name
+                }
+              });
+              setPeople(updatedPeople);
+            }
+          }
+
+          const onModifyNew = e => {
+            const { value } = e.target;
+            setNewPerson(value);
+          }
+
+          const addNewPerson = e => {
+            // If we came here from onKeyUp and the key pressed wasn't "enter", then nevermind
+            if (e.keyCode && e.keyCode !== 13) {
+              return;
+            }
+
+            setPeople([...people, newPerson]);
+            setNewPerson("");
+          }
+
+          const startSpin = e => {
+            setSpinning(true);
+            doSpin(10);
+          }
+
+          const doSpin = interval => {
+            const randomlySorted = [...people].sort((a, b) => Math.random() > 0.5 ? 1 : -1);
+            setPeople(randomlySorted);
+
+            if (interval <= 750) {
+              setTimeout(doSpin, interval * 1.5, interval * 1.5);
+            } else {
+              setSpinning(false);
+            }
+          }
+
+          return html`
+            <div id="name-list-wrapper">
+              <${SpinButton} spin=${startSpin} disabled=${spinning} />
+              <div id="name-list">
+              ${people.map((person, index) => 
+                html`<div class="person-line-item"><div class="number">#${index + 1}</div><input type="text" value=${person} onInput=${onModifyExisting(index)} /></div>`
+              )}
+              <div class="person-line-item"><div class="number invisible-number">##</div><input type="text" onInput=${onModifyNew} onKeyUp=${addNewPerson} value=${newPerson} /><button class="button-mini" onClick=${addNewPerson}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button></div>
+              </div>
+            </div>`;
+        }
+
+        function SpinButton({ spin, disabled }) {
+          return html`
+          <button onClick=${spin} disabled=${disabled}>
+            <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" width="52" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="feather feather-refresh-cw"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+          </button>`;
+        }
+
+        render(html`<${App} />`, document.getElementById("app"));
+    </script>
+  </head>
+  <body>
+    <script src="https://unpkg.com/magic-snowflakes/dist/snowflakes.min.js"></script>
+    <script>
+        var sf = new Snowflakes({
+            count: 100
+        });
+    </script>
+    <ul class="lightrope">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+    <div class="crazy-background title">SPINOMETER</div>
+    <div id="app"></div>
+  </body>
+</html>
